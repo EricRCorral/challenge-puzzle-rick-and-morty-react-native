@@ -10,6 +10,10 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "android": {
+      "package": "com.ericrcorral.rick_and_morty_rn_redux",
+      "versionCode": 1
+    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },

@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import {
-  FlatList,
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
@@ -10,61 +9,21 @@ import {
 import {
   Searcher,
   Container,
-  Card,
+  Cards,
   Tab,
   Tabs,
   Txt,
 } from "../components/Components";
-import { useQuery } from "@apollo/client";
-import {
-  queryCharacters,
-  queryEpisodes,
-  queryLocations,
-} from "../apollo/queries";
 import { Ionicons } from "@expo/vector-icons";
+import { connect } from "react-redux";
+import { setNameAction, setCurrentCardAction } from "../redux/queryDuck";
 
-const SearchScreen = ({ navigation }) => {
-  const [name, setName] = useState("");
-  const [filter, setFilter] = useState("characters");
-
-  const tabs = ["Characters", "|", "Locations", "|", "Episodes"];
-
-  let query =
-    filter === "characters"
-      ? queryCharacters
-      : filter === "locations"
-      ? queryLocations
-      : queryEpisodes;
-
-  const { loading, error, data, fetchMore } = useQuery(query, {
-    variables: { name: { name: name }, page: 1 },
-  });
-
-  function fetchMoreData() {
-    const { next } = data[filter].info;
-
-    fetchMore({
-      variables: { name: { name: name }, page: next },
-
-      updateQuery: (prevResult, { fetchMoreResult }) => {
-        if (next === null) {
-          return prevResult;
-        } else {
-          fetchMoreResult[filter].results = [
-            ...prevResult[filter].results,
-            ...fetchMoreResult[filter].results,
-          ];
-          return fetchMoreResult;
-        }
-      },
-    });
-  }
-
+const SearchScreen = ({ name, fetching, error, setNameAction }) => {
   return (
     <Container>
       <View style={styles.searcherBox}>
-        <Searcher name={name} setName={setName} />
-        <TouchableOpacity onPress={() => setName("")}>
+        <Searcher />
+        <TouchableOpacity onPress={() => setNameAction("")}>
           <Ionicons
             name="md-remove-circle"
             size={50}
@@ -82,48 +41,15 @@ const SearchScreen = ({ navigation }) => {
             style={styles.image}
           />
         </>
-      ) : loading ? (
-        <ActivityIndicator color="darkblue" size="large" />
       ) : error ? (
         <Txt style={styles.text}>No results ❌</Txt>
+      ) : fetching ? (
+        <ActivityIndicator color="darkblue" size="large" />
       ) : (
-        <FlatList
-          data={data[filter].results}
-          style={styles.spaceBottom}
-          ListFooterComponent={
-            data[filter].info.next !== null && (
-              <ActivityIndicator color="darkblue" size="large" />
-            )
-          }
-          ListFooterComponentStyle={styles.loader}
-          onEndReached={fetchMoreData}
-          onEndReachedThreshold={0.5}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Details", { filter: filter, data: item })
-              }
-            >
-              <Card
-                name={item.name}
-                filter={filter}
-                image={item.image}
-                dimension={item.dimension}
-                episode={item.episode}
-              />
-            </TouchableOpacity>
-          )}
-        />
+        <Cards />
       )}
       <Tabs>
-        {tabs.map((tab, i) => (
-          <Tab
-            key={`${tab}${i}`}
-            filter={tab}
-            setFilter={setFilter}
-            currentFilter={filter}
-          />
-        ))}
+        <Tab></Tab>
       </Tabs>
     </Container>
   );
@@ -138,13 +64,6 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginLeft: 3,
-  },
-  spaceBottom: {
-    marginBottom: "18%",
-  },
-  loader: {
-    paddingTop: "5%",
-    paddingBottom: "3%",
   },
   image: {
     width: "100%",
@@ -163,4 +82,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SearchScreen;
+function mapState(state) {
+  return {
+    name: state.name,
+    fetching: state.fetching,
+    error: state.error,
+  };
+}
+
+export default connect(mapState, { setNameAction, setCurrentCardAction })(
+  SearchScreen
+);

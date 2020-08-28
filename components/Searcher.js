@@ -1,13 +1,15 @@
 import React from "react";
 import { TextInput, StyleSheet } from "react-native";
+import { connect } from "react-redux";
+import { setNameAction } from "../redux/queryDuck";
 
-const Searcher = (props) => {
+const Searcher = ({ name, setNameAction }) => {
   return (
     <TextInput
       placeholder="Character, location, episode..."
       style={styles.searcher}
-      value={props.name}
-      onChange={(e) => props.setName(e.nativeEvent.text)}
+      value={name}
+      onChange={(e) => setNameAction(e.nativeEvent.text)}
     />
   );
 };
@@ -23,4 +25,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Searcher;
+function mapState(state) {
+  return {
+    name: state.name,
+  };
+}
+
+export default connect(mapState, { setNameAction })(Searcher);

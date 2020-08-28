@@ -1,13 +1,18 @@
-import React from "react";
-import { View, Image, ScrollView, StyleSheet } from "react-native";
-import { Container, Title, Card, Txt } from "../components/Components";
+import React, { useEffect } from "react";
+import { View, Image, ScrollView, StyleSheet, BackHandler } from "react-native";
+import { Container, Title, Cards, Txt } from "../components/Components";
+import { connect } from "react-redux";
+import { setFilterSelectAction } from "../redux/queryDuck";
+import { useNavigation } from "@react-navigation/native";
 
-const DetailsScreen = ({ route }) => {
-  let filter = route.params.filter;
-
-  let data = route.params.data;
-
+const DetailsScreen = ({ data, filter, setFilterSelectAction }) => {
   let filterSelect = filter === "locations" ? "residents" : "characters";
+
+  const beforeRemove = useNavigation().addListener;
+
+  useEffect(() => {
+    beforeRemove("beforeRemove", () => setFilterSelectAction(false));
+  }, []);
 
   return filter === "characters" ? (
     <Container>
@@ -72,15 +77,7 @@ const DetailsScreen = ({ route }) => {
                 <Title>Characters:</Title>
               )}
             </View>
-
-            {data[filterSelect].slice(0, 5).map((item) => (
-              <Card
-                key={item.id}
-                id={item.id}
-                name={item.name}
-                image={item.image}
-              />
-            ))}
+            <Cards />
           </>
         )}
       </ScrollView>
@@ -112,4 +109,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DetailsScreen;
+function mapState(state) {
+  return {
+    data: state.data[state.filter].results[state.currentCard],
+    filter: state.filter,
+  };
+}
+
+export default connect(mapState, { setFilterSelectAction })(DetailsScreen);

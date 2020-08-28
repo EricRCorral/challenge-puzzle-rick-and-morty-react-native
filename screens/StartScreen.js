@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     marginBottom: "3%",
   },
   name: {
-    fontSize: 20
+    fontSize: 20,
   },
   button: {
     borderRadius: 10,
