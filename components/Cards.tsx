@@ -16,21 +16,22 @@ import {
   setFilterSelectAction,
   getDataAction,
 } from "../redux/queryDuck";
+import { State } from "../interfaces/State";
 
 const Cards = ({
   filter,
-  dataFiltered,
+  data,
   currentCard,
   isFilterSelect,
   setCurrentCardAction,
   setFilterSelectAction,
   getDataAction,
-}) => {
+}: State) => {
   const navigation = useNavigation();
 
   let filterSelect = filter === "locations" ? "residents" : "characters";
 
-  function navigate(i) {
+  function navigate(i: number) {
     if (filter !== "characters") {
       setFilterSelectAction(true);
     }
@@ -38,7 +39,7 @@ const Cards = ({
     navigation.navigate("Details");
   }
 
-  function fetchMoreData(next) {
+  function fetchMoreData(next: number) {
     getDataAction(next);
   }
 
@@ -46,15 +47,15 @@ const Cards = ({
     <FlatList
       data={
         !isFilterSelect
-          ? dataFiltered.results
-          : dataFiltered.results[currentCard][filterSelect].slice(0, 5)
+          ? data.results
+          : data.results[currentCard][filterSelect].slice(0, 5)
       }
       style={!isFilterSelect && styles.spaceBottom}
       ListFooterComponentStyle={styles.loader}
-      onEndReached={() => fetchMoreData(dataFiltered.info.next)}
+      onEndReached={() => fetchMoreData(data.info.next)}
       onEndReachedThreshold={0.5}
       ListFooterComponent={
-        dataFiltered.info.next !== null && (
+        data.info.next !== null && (
           <ActivityIndicator color="darkblue" size="large" />
         )
       }
@@ -125,10 +126,10 @@ const styles = StyleSheet.create({
   },
 });
 
-function mapState(state) {
+function mapState(state: State) {
   const filter = state.filter;
   return {
-    dataFiltered: state.data[filter],
+    data: state.data[filter],
     filter: filter,
     currentCard: state.currentCard,
     isFilterSelect: state.isFilterSelect,

@@ -2,7 +2,7 @@ import React from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { Title, Txt } from "../components/Components";
 
-const StartScreen = ({ navigation }) => {
+const StartScreen = ({ navigation }: any) => {
   const date = `${new Date().getDate()}/${
     new Date().getMonth() + 1
   }/${new Date().getFullYear()}`;

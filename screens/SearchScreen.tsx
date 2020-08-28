@@ -17,8 +17,9 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { connect } from "react-redux";
 import { setNameAction, setCurrentCardAction } from "../redux/queryDuck";
+import { State } from "../interfaces/State";
 
-const SearchScreen = ({ name, fetching, error, setNameAction }) => {
+const SearchScreen = ({ name, fetching, error, setNameAction }: State) => {
   return (
     <Container>
       <View style={styles.searcherBox}>
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function mapState(state) {
+function mapState(state: State) {
   return {
     name: state.name,
     fetching: state.fetching,

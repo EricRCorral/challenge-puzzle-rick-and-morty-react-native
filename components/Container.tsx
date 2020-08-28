@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 
-const Container = (props) => {
+const Container = (props: any) => {
   return <View style={styles.container}>{props.children}</View>;
 };
 

@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
-import { View, Image, ScrollView, StyleSheet, BackHandler } from "react-native";
+import { View, Image, ScrollView, StyleSheet } from "react-native";
 import { Container, Title, Cards, Txt } from "../components/Components";
 import { connect } from "react-redux";
 import { setFilterSelectAction } from "../redux/queryDuck";
 import { useNavigation } from "@react-navigation/native";
+import { State } from "../interfaces/State";
 
-const DetailsScreen = ({ data, filter, setFilterSelectAction }) => {
+const DetailsScreen = ({ data, filter, setFilterSelectAction }: State) => {
   let filterSelect = filter === "locations" ? "residents" : "characters";
 
   const beforeRemove = useNavigation().addListener;
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function mapState(state) {
+function mapState(state: State) {
   return {
     data: state.data[state.filter].results[state.currentCard],
     filter: state.filter,

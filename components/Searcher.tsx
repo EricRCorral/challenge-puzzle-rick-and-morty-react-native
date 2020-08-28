@@ -2,8 +2,9 @@ import React from "react";
 import { TextInput, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 import { setNameAction } from "../redux/queryDuck";
+import { State } from "../interfaces/State";
 
-const Searcher = ({ name, setNameAction }) => {
+const Searcher = ({ name, setNameAction }: State) => {
   return (
     <TextInput
       placeholder="Character, location, episode..."
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function mapState(state) {
+function mapState(state: State) {
   return {
     name: state.name,
   };
