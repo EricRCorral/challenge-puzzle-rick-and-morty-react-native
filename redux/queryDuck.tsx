@@ -1,10 +1,25 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
-import {
-  queryCharacters,
-  queryEpisodes,
-  queryLocations,
-} from "../apollo/queries";
-import { State, Action } from "../interfaces/Interfaces";
+import queryCharacters from "../apollo/queries/queryCharacters";
+import queryEpisodes from "../apollo/queries/queryEpisodes";
+import queryLocations from "../apollo/queries/queryLocations";
+
+interface State {
+  name: string;
+  filter: string;
+  data: object;
+  fetching: boolean;
+  currentCard: number;
+  filterNoCharacters: boolean;
+}
+
+interface Action {
+  type: string;
+  payload: any;
+}
+
+interface Dispatch {
+  (type: object): any;
+}
 
 let initialData: State = {
   name: "",
@@ -12,7 +27,7 @@ let initialData: State = {
   data: {},
   fetching: false,
   currentCard: 0,
-  isFilterSelect: false,
+  filterNoCharacters: false,
 };
 
 const client = new ApolloClient({
@@ -27,7 +42,7 @@ const GET_MORE_DATA_SUCCESS = "GET_MORE_DATA_SUCCESS";
 const SET_NAME = "SET_NAME";
 const SET_FILTER = "SET_FILTER";
 const SET_CURRENT_CARD = "SET_CURRENT_CARD";
-const SET_FILTER_SELECT = "SET_FILTER_SELECT";
+const SET_REQUIRED_DATA = "SET_REQUIRED_DATA";
 
 export default function reducer(state = initialData, action: Action) {
   switch (action.type) {
@@ -57,15 +72,15 @@ export default function reducer(state = initialData, action: Action) {
       return { ...state, filter: action.payload };
     case SET_CURRENT_CARD:
       return { ...state, currentCard: action.payload };
-    case SET_FILTER_SELECT:
-      return { ...state, isFilterSelect: action.payload };
+    case SET_REQUIRED_DATA:
+      return { ...state, filterNoCharacters: action.payload };
     default:
       return state;
   }
 }
 
 export let getDataAction = (next?: number) => (
-  dispatch: Action,
+  dispatch: Dispatch,
   getState: { (): any }
 ) => {
   let query =
@@ -81,25 +96,22 @@ export let getDataAction = (next?: number) => (
     });
 
     return client
-      .watchQuery({
+      .query({
         query: query,
         variables: { name: { name: getState().name }, page: 1 },
         errorPolicy: "all",
       })
-      .subscribe(({ data, errors }) => {
-        if (data[getState().filter] !== null) {
-          dispatch({
-            type: GET_DATA_SUCCESS,
-            payload: { data, error: false },
-          });
-        } else {
-          if (errors) {
-            dispatch({
-              type: GET_DATA_ERROR,
-              payload: true,
-            });
-          }
-        }
+      .then(({ data }) => {
+        dispatch({
+          type: GET_DATA_SUCCESS,
+          payload: { data, error: false },
+        });
+      })
+      .catch(() => {
+        dispatch({
+          type: GET_DATA_ERROR,
+          payload: { error: true },
+        });
       });
   } else {
     return client
@@ -130,7 +142,7 @@ export let getDataAction = (next?: number) => (
 };
 
 export let setNameAction = (searcherVal: string) => (
-  dispatch: Action,
+  dispatch: Dispatch,
   getState: { (): any }
 ) => {
   dispatch({
@@ -141,7 +153,7 @@ export let setNameAction = (searcherVal: string) => (
 };
 
 export let setFilterAction = (filter: string) => (
-  dispatch: Action,
+  dispatch: Dispatch,
   getState: { (): any }
 ) => {
   dispatch({
@@ -151,16 +163,18 @@ export let setFilterAction = (filter: string) => (
   getDataAction()(dispatch, getState);
 };
 
-export let setCurrentCardAction = (i: number) => (dispatch: Action) => {
+export let setCurrentCardAction = (i: number) => (dispatch: Dispatch) => {
   dispatch({
     type: SET_CURRENT_CARD,
     payload: i,
   });
 };
 
-export let setFilterSelectAction = (is: boolean) => (dispatch: Action) => {
+export let setRequiredDataAction = (filterNoCharacters: boolean) => (
+  dispatch: Dispatch
+) => {
   dispatch({
-    type: SET_FILTER_SELECT,
-    payload: is,
+    type: SET_REQUIRED_DATA,
+    payload: filterNoCharacters,
   });
 };

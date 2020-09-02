@@ -6,20 +6,28 @@ import {
   Image,
   View,
 } from "react-native";
-import {
-  Searcher,
-  Container,
-  Cards,
-  Tab,
-  Tabs,
-  Txt,
-} from "../components/Components";
+import { Searcher, Container, Cards, Tab, Tabs, Txt } from "../components";
 import { Ionicons } from "@expo/vector-icons";
 import { connect } from "react-redux";
 import { setNameAction, setCurrentCardAction } from "../redux/queryDuck";
-import { State } from "../interfaces/State";
+import { Response } from "../apollo/types";
 
-const SearchScreen = ({ name, fetching, error, setNameAction }: State) => {
+interface State {
+  data: Response;
+  filter: string;
+  name: string;
+  fetching: boolean;
+  error: boolean;
+  setNameAction: { (name: string): any };
+}
+
+const SearchScreen = ({
+  data,
+  name,
+  fetching,
+  error,
+  setNameAction,
+}: State) => {
   return (
     <Container>
       <View style={styles.searcherBox}>
@@ -43,9 +51,11 @@ const SearchScreen = ({ name, fetching, error, setNameAction }: State) => {
           />
         </>
       ) : error ? (
-        <Txt style={styles.text}>No results ❌</Txt>
+        <Txt style={styles.text}>Something goes wrong ❌</Txt>
       ) : fetching ? (
         <ActivityIndicator color="darkblue" size="large" />
+      ) : !data ? (
+        <Txt style={styles.text}>No results 😔</Txt>
       ) : (
         <Cards />
       )}
@@ -83,14 +93,16 @@ const styles = StyleSheet.create({
   },
 });
 
-function mapState(state: State) {
+function mapStateToProps(state: State) {
   return {
     name: state.name,
     fetching: state.fetching,
     error: state.error,
+    data: state.data[state.filter],
   };
 }
 
-export default connect(mapState, { setNameAction, setCurrentCardAction })(
-  SearchScreen
-);
+export default connect(mapStateToProps, {
+  setNameAction,
+  setCurrentCardAction,
+})(SearchScreen);

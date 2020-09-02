@@ -3,7 +3,7 @@ import {gql} from '@apollo/client'
 const queryEpisodes = gql`
   query($name: FilterEpisode, $page: Int) {
     episodes(filter: $name, page: $page) {
-      results {
+      result {
         id
         name
         air_date

@@ -1,6 +1,6 @@
-import { Characters, Locations, Episodes } from "./Interfaces";
+import { Characters, Locations, Episodes } from './variables'
 
-export interface Data {
+export interface Response {
   [characters: string]: Characters;
   locations?: Locations;
   episodes?: Episodes;

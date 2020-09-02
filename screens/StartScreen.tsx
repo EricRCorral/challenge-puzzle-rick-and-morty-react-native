@@ -1,9 +1,9 @@
 import React from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
-import { Title, Txt } from "../components/Components";
+import { Title, Txt } from "../components";
 
 const StartScreen = ({ navigation }: any) => {
-  const date = `${new Date().getDate()}/${
+  const DATE = `${new Date().getDate()}/${
     new Date().getMonth() + 1
   }/${new Date().getFullYear()}`;
 
@@ -20,7 +20,7 @@ const StartScreen = ({ navigation }: any) => {
         >
           <Txt>ENTER</Txt>
         </TouchableOpacity>
-        <Txt>{date}</Txt>
+        <Txt>{DATE}</Txt>
       </View>
     </View>
   );

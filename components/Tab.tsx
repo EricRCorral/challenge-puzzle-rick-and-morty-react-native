@@ -3,14 +3,18 @@ import { View, TouchableOpacity, StyleSheet } from "react-native";
 import Txt from "./Txt";
 import { connect } from "react-redux";
 import { setFilterAction } from "../redux/queryDuck";
-import { State } from "../interfaces/State";
+
+interface State {
+  filter: string;
+  setFilterAction: { (filter: string): any };
+}
 
 const Tab = ({ filter, setFilterAction }: State) => {
-  const tabs = ["Characters", "|", "Locations", "|", "Episodes"];
+  const TABS = ["Characters", "|", "Locations", "|", "Episodes"];
 
   return (
     <>
-      {tabs.map((tabFilterName, i) =>
+      {TABS.map((tabFilterName, i) =>
         tabFilterName !== "|" ? (
           <TouchableOpacity
             key={tabFilterName}
@@ -53,10 +57,10 @@ const styles = StyleSheet.create({
   },
 });
 
-function mapState(state: State) {
+function mapStateToProps(state: State) {
   return {
     filter: state.filter,
   };
 }
 
-export default connect(mapState, { setFilterAction })(Tab);
+export default connect(mapStateToProps, { setFilterAction })(Tab);

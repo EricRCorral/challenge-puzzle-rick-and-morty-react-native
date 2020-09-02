@@ -1,7 +1,7 @@
 import React from "react";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { StatusBar } from "expo-status-bar";
-import { StartScreen, SearchScreen, DetailsScreen } from "./screens/Screens";
+import { StartScreen, SearchScreen, DetailsScreen } from "./screens";
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";

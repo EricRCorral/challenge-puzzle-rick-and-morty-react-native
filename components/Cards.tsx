@@ -13,60 +13,70 @@ import { connect } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import {
   setCurrentCardAction,
-  setFilterSelectAction,
+  setRequiredDataAction,
   getDataAction,
 } from "../redux/queryDuck";
-import { State } from "../interfaces/State";
+import { Response } from "../apollo/types";
+
+interface State {
+  filter: string;
+  data: Response;
+  currentCard: number;
+  filterNoCharacters: boolean;
+  setCurrentCardAction: { (index: number): any };
+  setRequiredDataAction: { (filterNoCharacters: boolean): any };
+  getDataAction: { (next: number): any };
+}
 
 const Cards = ({
   filter,
   data,
   currentCard,
-  isFilterSelect,
+  filterNoCharacters,
   setCurrentCardAction,
-  setFilterSelectAction,
+  setRequiredDataAction,
   getDataAction,
 }: State) => {
   const navigation = useNavigation();
 
-  let filterSelect = filter === "locations" ? "residents" : "characters";
+  const REQUIRED_DATA = filter === "locations" ? "residents" : "characters";
 
-  function navigate(i: number) {
+  const navigate = (i: number) => {
     if (filter !== "characters") {
-      setFilterSelectAction(true);
+      setRequiredDataAction(true);
     }
     setCurrentCardAction(i);
     navigation.navigate("Details");
-  }
+  };
 
-  function fetchMoreData(next: number) {
+  const fetchMoreData = (next: number) => {
     getDataAction(next);
-  }
+  };
 
   return (
     <FlatList
       data={
-        !isFilterSelect
+        !filterNoCharacters
           ? data.results
-          : data.results[currentCard][filterSelect].slice(0, 5)
+          : data.results[currentCard][REQUIRED_DATA].slice(0, 5)
       }
-      style={!isFilterSelect && styles.spaceBottom}
+      style={!filterNoCharacters && styles.spaceBottom}
       ListFooterComponentStyle={styles.loader}
       onEndReached={() => fetchMoreData(data.info.next)}
       onEndReachedThreshold={0.5}
       ListFooterComponent={
-        data.info.next !== null && (
+        !!data.info.next && (
           <ActivityIndicator color="darkblue" size="large" />
         )
       }
       renderItem={({ item, index }) => (
         <TouchableOpacity
-          disabled={isFilterSelect}
+          disabled={filterNoCharacters}
           key={item.id}
           onPress={() => navigate(index)}
         >
           <View style={styles.card}>
-            {filter === "characters" || isFilterSelect ? (
+            {filter === "characters" || filterNoCharacters ? (
               <>
                 <Image
                   style={styles.image}
@@ -126,18 +136,18 @@ const styles = StyleSheet.create({
   },
 });
 
-function mapState(state: State) {
+function mapStateToProps(state: State) {
   const filter = state.filter;
   return {
     data: state.data[filter],
     filter: filter,
     currentCard: state.currentCard,
-    isFilterSelect: state.isFilterSelect,
+    filterNoCharacters: state.filterNoCharacters,
   };
 }
 
-export default connect(mapState, {
+export default connect(mapStateToProps, {
   setCurrentCardAction,
-  setFilterSelectAction,
+  setRequiredDataAction,
   getDataAction,
 })(Cards);

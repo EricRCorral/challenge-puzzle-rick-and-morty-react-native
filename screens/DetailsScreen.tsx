@@ -1,39 +1,57 @@
 import React, { useEffect } from "react";
 import { View, Image, ScrollView, StyleSheet } from "react-native";
-import { Container, Title, Cards, Txt } from "../components/Components";
+import { Container, Title, Cards, Txt } from "../components";
 import { connect } from "react-redux";
-import { setFilterSelectAction } from "../redux/queryDuck";
+import { setRequiredDataAction } from "../redux/queryDuck";
 import { useNavigation } from "@react-navigation/native";
-import { State } from "../interfaces/State";
+import { Response } from "../apollo/types";
 
-const DetailsScreen = ({ data, filter, setFilterSelectAction }: State) => {
-  let filterSelect = filter === "locations" ? "residents" : "characters";
+interface State {
+  data: Response;
+  filter: string;
+  currentCard: number;
+  setRequiredDataAction: { (filterNoCharacters: boolean): any };
+}
 
-  const beforeRemove = useNavigation().addListener;
+const DetailsScreen = ({ data, filter, setRequiredDataAction }: State) => {
+  const REQUIRED_DATA = filter === "locations" ? "residents" : "characters";
+
+  const {
+    image,
+    name,
+    gender,
+    species,
+    type,
+    dimension,
+    episode,
+    air_date,
+  } = data;
+
+  const BEFORE_REMOVE = useNavigation().addListener;
 
   useEffect(() => {
-    beforeRemove("beforeRemove", () => setFilterSelectAction(false));
+    BEFORE_REMOVE("beforeRemove", () => setRequiredDataAction(false));
   }, []);
 
   return filter === "characters" ? (
     <Container>
       <ScrollView>
-        <Image style={styles.image} source={{ uri: data.image }} />
+        <Image style={styles.image} source={{ uri: image }} />
         <View style={styles.nameBox}>
-          <Title style={styles.name}>{data.name.toUpperCase()}</Title>
+          <Title style={styles.name}>{name.toUpperCase()}</Title>
         </View>
         <View style={styles.inline}>
           <Title>Gender: </Title>
-          <Txt>{data.gender}</Txt>
+          <Txt>{gender}</Txt>
         </View>
         <View style={styles.inline}>
           <Title>Specie: </Title>
-          <Txt>{data.species}</Txt>
+          <Txt>{species}</Txt>
         </View>
-        {data.type !== "" && (
+        {type !== "" && (
           <View style={styles.inline}>
             <Title>Type: </Title>
-            <Txt>{data.type}</Txt>
+            <Txt>{type}</Txt>
           </View>
         )}
       </ScrollView>
@@ -42,34 +60,34 @@ const DetailsScreen = ({ data, filter, setFilterSelectAction }: State) => {
     <Container>
       <ScrollView>
         <View style={styles.nameBox}>
-          <Title style={styles.name}>{data.name.toUpperCase()}</Title>
+          <Title style={styles.name}>{name.toUpperCase()}</Title>
         </View>
-        {data.dimension && (
+        {dimension && (
           <View style={styles.inline}>
             <Title>Dimension: </Title>
-            <Txt>{data.dimension}</Txt>
+            <Txt>{dimension}</Txt>
           </View>
         )}
-        {data.type && (
+        {type && (
           <View style={styles.inline}>
             <Title>Type: </Title>
-            <Txt>{data.type}</Txt>
+            <Txt>{type}</Txt>
           </View>
         )}
-        {data.episode && (
+        {episode && (
           <View style={styles.inline}>
             <Title>Episode: </Title>
-            <Txt>{data.episode}</Txt>
+            <Txt>{episode}</Txt>
           </View>
         )}
-        {data.air_date && (
+        {air_date && (
           <View style={styles.inline}>
             <Title>Air date: </Title>
-            <Txt>{data.air_date}</Txt>
+            <Txt>{air_date}</Txt>
           </View>
         )}
 
-        {data[filterSelect].image !== null && (
+        {data[REQUIRED_DATA].image !== null && (
           <>
             <View style={styles.filterSelectTitle}>
               {filter === "locations" ? (
@@ -110,11 +128,13 @@ const styles = StyleSheet.create({
   },
 });
 
-function mapState(state: State) {
+function mapStateToProps(state: State) {
   return {
     data: state.data[state.filter].results[state.currentCard],
     filter: state.filter,
   };
 }
 
-export default connect(mapState, { setFilterSelectAction })(DetailsScreen);
+export default connect(mapStateToProps, { setRequiredDataAction })(
+  DetailsScreen
+);

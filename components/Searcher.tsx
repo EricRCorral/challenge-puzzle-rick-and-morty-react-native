@@ -2,7 +2,11 @@ import React from "react";
 import { TextInput, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 import { setNameAction } from "../redux/queryDuck";
-import { State } from "../interfaces/State";
+
+interface State {
+  name: string;
+  setNameAction: { (name: string): any };
+}
 
 const Searcher = ({ name, setNameAction }: State) => {
   return (
@@ -26,10 +30,10 @@ const styles = StyleSheet.create({
   },
 });
 
-function mapState(state: State) {
+function mapStateToProps(state: State) {
   return {
     name: state.name,
   };
 }
 
-export default connect(mapState, { setNameAction })(Searcher);
+export default connect(mapStateToProps, { setNameAction })(Searcher);
