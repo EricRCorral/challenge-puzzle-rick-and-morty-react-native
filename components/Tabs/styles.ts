@@ -1,9 +1,4 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
-
-const Tabs = (props: any) => {
-  return <View style={styles.tabs}>{props.children}</View>;
-};
+import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   tabs: {
@@ -19,4 +14,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Tabs;
+export default styles;

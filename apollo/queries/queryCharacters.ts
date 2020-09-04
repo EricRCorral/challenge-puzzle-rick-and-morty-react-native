@@ -1,4 +1,5 @@
-import {gql} from '@apollo/client'
+import { gql } from "@apollo/client";
+import { Characters } from "../types";
 
 const queryCharacters = gql`
   query Characters($name: FilterCharacter, $page: Int) {
@@ -19,4 +20,17 @@ const queryCharacters = gql`
   }
 `;
 
-export default queryCharacters
+export interface Variables {
+  name: {
+    name: string;
+  };
+  page: number;
+}
+
+export interface Response {
+  [index: string]: Characters | Error | undefined;
+  characters: Characters;
+  error?: Error;
+}
+
+export default queryCharacters;

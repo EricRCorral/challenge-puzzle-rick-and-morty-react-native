@@ -1,13 +1,16 @@
 import React, { useEffect } from "react";
 import { View, Image, ScrollView, StyleSheet } from "react-native";
-import { Container, Title, Cards, Txt } from "../components";
+import { Container, Title, Cards, Txt } from "../../components";
 import { connect } from "react-redux";
-import { setRequiredDataAction } from "../redux/queryDuck";
+import { setRequiredDataAction } from "../../redux/queryDuck";
 import { useNavigation } from "@react-navigation/native";
-import { Response } from "../apollo/types";
+import { Response as CharactersResponse } from "../../apollo/queries/queryCharacters";
+import { Response as EpisodesResponse } from "../../apollo/queries/queryEpisodes";
+import { Response as LocationsResponse } from "../../apollo/queries/queryLocations";
+import styles from './styles'
 
 interface State {
-  data: Response;
+  data: CharactersResponse | EpisodesResponse | LocationsResponse;
   filter: string;
   currentCard: number;
   setRequiredDataAction: { (filterNoCharacters: boolean): any };
@@ -62,25 +65,25 @@ const DetailsScreen = ({ data, filter, setRequiredDataAction }: State) => {
         <View style={styles.nameBox}>
           <Title style={styles.name}>{name.toUpperCase()}</Title>
         </View>
-        {dimension && (
+        {!!dimension && (
           <View style={styles.inline}>
             <Title>Dimension: </Title>
             <Txt>{dimension}</Txt>
           </View>
         )}
-        {type && (
+        {!!type && (
           <View style={styles.inline}>
             <Title>Type: </Title>
             <Txt>{type}</Txt>
           </View>
         )}
-        {episode && (
+        {!!episode && (
           <View style={styles.inline}>
             <Title>Episode: </Title>
             <Txt>{episode}</Txt>
           </View>
         )}
-        {air_date && (
+        {!!air_date && (
           <View style={styles.inline}>
             <Title>Air date: </Title>
             <Txt>{air_date}</Txt>
@@ -90,11 +93,9 @@ const DetailsScreen = ({ data, filter, setRequiredDataAction }: State) => {
         {data[REQUIRED_DATA].image !== null && (
           <>
             <View style={styles.filterSelectTitle}>
-              {filter === "locations" ? (
-                <Title>Residents:</Title>
-              ) : (
-                <Title>Characters:</Title>
-              )}
+              <Title>
+                {filter === "locations" ? "Residents:" : "Characters:"}
+              </Title>
             </View>
             <Cards />
           </>
@@ -103,30 +104,6 @@ const DetailsScreen = ({ data, filter, setRequiredDataAction }: State) => {
     </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  nameBox: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginVertical: 15,
-  },
-  name: {
-    fontSize: 24,
-  },
-  image: {
-    width: "100%",
-    height: 350,
-  },
-  inline: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 7,
-  },
-  filterSelectTitle: {
-    marginTop: 15,
-    marginBottom: 5,
-  },
-});
 
 function mapStateToProps(state: State) {
   return {
