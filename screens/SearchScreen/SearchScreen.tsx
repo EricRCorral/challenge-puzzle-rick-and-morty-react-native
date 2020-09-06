@@ -1,4 +1,5 @@
 import React from "react";
+import { IMG } from "../../assets/images";
 import { TouchableOpacity, ActivityIndicator, Image, View } from "react-native";
 import { Searcher, Container, Cards, Tab, Tabs, Txt } from "../../components";
 import { Ionicons } from "@expo/vector-icons";
@@ -38,23 +39,28 @@ const SearchScreen = ({
       </TouchableOpacity>
     </View>
 
-    {name.length < 3 ? (
-      <>
-        <Txt style={styles.text}>Here will appear what you are searching</Txt>
-        <Image
-          source={require("../assets/images/rick-and-morty-search.png")}
-          style={styles.image}
-        />
-      </>
-    ) : error ? (
-      <Txt style={styles.text}>Something goes wrong ❌</Txt>
-    ) : fetching ? (
-      <ActivityIndicator color="darkblue" size="large" />
-    ) : !data ? (
-      <Txt style={styles.text}>No results 😔</Txt>
-    ) : (
-      <Cards />
-    )}
+    {(() => {
+      if (name.length < 3) {
+        return (
+          <>
+            <Txt style={styles.text}>
+              Here will appear what you are searching
+            </Txt>
+            <Image source={IMG} style={styles.image} />
+          </>
+        );
+      }
+
+      if (error) {
+        return <Txt style={styles.text}>Something goes wrong ❌</Txt>;
+      }
+
+      if (fetching) return <ActivityIndicator color="#7ec4bf" size="large" />;
+
+      if (!data) return <Txt style={styles.text}>No results 😔</Txt>;
+
+      return <Cards />;
+    })()}
     <Tabs>
       <Tab></Tab>
     </Tabs>

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import Txt from "../Txt/Txt";
 import { connect } from "react-redux";
 import { setFilterAction } from "../../redux/queryDuck";
@@ -10,33 +10,33 @@ interface State {
   setFilterAction: { (filter: string): any };
 }
 
-const TABS = ["Characters", "|", "Locations", "|", "Episodes"];
+const TABS = ["Characters", "Locations", "Episodes"];
 
 const Tab = ({ filter, setFilterAction }: State) => (
   <>
-    {TABS.map((tabFilterName, i) =>
-      tabFilterName !== "|" ? (
-        <TouchableOpacity
-          key={tabFilterName}
-          style={styles.tab}
-          onPress={() => setFilterAction(tabFilterName.toLowerCase())}
+    {TABS.map((tabFilterName, i) => (
+      <TouchableOpacity
+        key={tabFilterName}
+        style={[
+          styles.tab,
+          {
+            backgroundColor:
+              tabFilterName.toLowerCase() === filter ? "#7ec4bf" : "white",
+          },
+        ]}
+        onPress={() => setFilterAction(tabFilterName.toLowerCase())}
+      >
+        <Txt
+          style={{
+            color:
+              tabFilterName.toLowerCase() === filter ? "white" : "black",
+            ...styles.text,
+          }}
         >
-          <Txt
-            style={{
-              color:
-                tabFilterName.toLowerCase() === filter ? "darkblue" : "black",
-              ...styles.text,
-            }}
-          >
-            {tabFilterName}
-          </Txt>
-        </TouchableOpacity>
-      ) : (
-        <View key={`${tabFilterName}${i}`} style={styles.divider}>
-          <Txt>|</Txt>
-        </View>
-      )
-    )}
+          {tabFilterName}
+        </Txt>
+      </TouchableOpacity>
+    ))}
   </>
 );
 function mapStateToProps(state: State) {

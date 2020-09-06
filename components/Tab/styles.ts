@@ -7,12 +7,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    borderLeftWidth: .5,
+    borderRightWidth: .5,
   },
   text: {
     fontSize: 16,
-  },
-  divider: {
-    justifyContent: "center",
   },
 });
 
