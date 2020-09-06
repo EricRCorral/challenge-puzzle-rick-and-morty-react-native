@@ -27,7 +27,7 @@ interface State {
   filterNoCharacters: boolean;
   setCurrentCardAction: { (index: number): any };
   setRequiredDataAction: { (filterNoCharacters: boolean): any };
-  getDataAction: { (next: number): any };
+  getDataAction: { (next?: number): any };
 }
 
 const Cards = ({
@@ -41,7 +41,24 @@ const Cards = ({
 }: State) => {
   const navigation = useNavigation();
 
-  const REQUIRED_DATA = filter === "locations" ? "residents" : "characters";
+  const DATA_FILTERED =
+    filter === "characters"
+      ? data.characters?.results
+      : filter === "locations"
+      ? data.locations?.results
+      : data.episodes?.results;
+
+  const REQUIRED_DATA =
+    filter === "locations"
+      ? data.locations?.results[currentCard].residents?.slice(0, 5)
+      : data.episodes?.results[currentCard].characters?.slice(0, 5);
+
+  const NEXT =
+    filter === "characters"
+      ? data.characters?.info.next
+      : filter === "locations"
+      ? data.locations?.info.next
+      : data.episodes?.info.next;
 
   const navigate = (i: number) => {
     if (filter !== "characters") {
@@ -51,23 +68,19 @@ const Cards = ({
     navigation.navigate("Details");
   };
 
-  const fetchMoreData = (next: number) => {
+  const fetchMoreData = (next?: number) => {
     getDataAction(next);
   };
 
   return (
     <FlatList
-      data={
-        !filterNoCharacters
-          ? data.results
-          : data.results[currentCard][REQUIRED_DATA].slice(0, 5)
-      }
+      data={!filterNoCharacters ? DATA_FILTERED : REQUIRED_DATA}
       style={!filterNoCharacters && styles.spaceBottom}
       ListFooterComponentStyle={styles.loader}
-      onEndReached={() => fetchMoreData(data.info.next)}
+      onEndReached={() => fetchMoreData(NEXT)}
       onEndReachedThreshold={0.5}
       ListFooterComponent={
-        !!data.info.next && <ActivityIndicator color="darkblue" size="large" />
+        !!NEXT && <ActivityIndicator color="#7ec4bf" size="large" />
       }
       renderItem={({ item, index }) => (
         <TouchableOpacity
@@ -102,12 +115,11 @@ const Cards = ({
 };
 
 function mapStateToProps(state: State) {
-  const filter = state.filter;
   return {
-    data: state.data[filter],
-    filter: filter,
+    filter: state.filter,
     currentCard: state.currentCard,
     filterNoCharacters: state.filterNoCharacters,
+    data: state.data,
   };
 }
 

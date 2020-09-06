@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Image, ScrollView, StyleSheet } from "react-native";
+import { View, Image, ScrollView } from "react-native";
 import { Container, Title, Cards, Txt } from "../../components";
 import { connect } from "react-redux";
 import { setRequiredDataAction } from "../../redux/queryDuck";
@@ -7,7 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Response as CharactersResponse } from "../../apollo/queries/queryCharacters";
 import { Response as EpisodesResponse } from "../../apollo/queries/queryEpisodes";
 import { Response as LocationsResponse } from "../../apollo/queries/queryLocations";
-import styles from './styles'
+import styles from "./styles";
 
 interface State {
   data: CharactersResponse | EpisodesResponse | LocationsResponse;
@@ -16,19 +16,30 @@ interface State {
   setRequiredDataAction: { (filterNoCharacters: boolean): any };
 }
 
-const DetailsScreen = ({ data, filter, setRequiredDataAction }: State) => {
-  const REQUIRED_DATA = filter === "locations" ? "residents" : "characters";
+const DetailsScreen = ({
+  data,
+  filter,
+  currentCard,
+  setRequiredDataAction,
+}: State) => {
+  const DATA =
+    filter === "characters"
+      ? data.characters?.results[currentCard]
+      : filter === "locations"
+      ? data.locations?.results[currentCard]
+      : data.episodes?.results[currentCard];
 
-  const {
-    image,
-    name,
-    gender,
-    species,
-    type,
-    dimension,
-    episode,
-    air_date,
-  } = data;
+  const REQUIRED_DATA =
+    filter === "locations" ? DATA?.residents : DATA?.characters;
+
+  const IMAGE = DATA?.image;
+  const NAME = DATA?.name;
+  const GENDER = DATA?.gender;
+  const SPECIES = DATA?.species;
+  const TYPE = DATA?.type;
+  const DIMENSION = DATA?.dimension;
+  const EPISODE = DATA?.episode;
+  const AIR_DATE = DATA?.air_date;
 
   const BEFORE_REMOVE = useNavigation().addListener;
 
@@ -39,22 +50,22 @@ const DetailsScreen = ({ data, filter, setRequiredDataAction }: State) => {
   return filter === "characters" ? (
     <Container>
       <ScrollView>
-        <Image style={styles.image} source={{ uri: image }} />
+        <Image style={styles.image} source={{ uri: IMAGE }} />
         <View style={styles.nameBox}>
-          <Title style={styles.name}>{name.toUpperCase()}</Title>
+          <Title style={styles.name}>{NAME?.toUpperCase()}</Title>
         </View>
         <View style={styles.inline}>
           <Title>Gender: </Title>
-          <Txt>{gender}</Txt>
+          <Txt>{GENDER}</Txt>
         </View>
         <View style={styles.inline}>
           <Title>Specie: </Title>
-          <Txt>{species}</Txt>
+          <Txt>{SPECIES}</Txt>
         </View>
-        {type !== "" && (
+        {TYPE !== "" && (
           <View style={styles.inline}>
             <Title>Type: </Title>
-            <Txt>{type}</Txt>
+            <Txt>{TYPE}</Txt>
           </View>
         )}
       </ScrollView>
@@ -63,34 +74,34 @@ const DetailsScreen = ({ data, filter, setRequiredDataAction }: State) => {
     <Container>
       <ScrollView>
         <View style={styles.nameBox}>
-          <Title style={styles.name}>{name.toUpperCase()}</Title>
+          <Title style={styles.name}>{NAME?.toUpperCase()}</Title>
         </View>
-        {!!dimension && (
+        {!!DIMENSION && (
           <View style={styles.inline}>
             <Title>Dimension: </Title>
-            <Txt>{dimension}</Txt>
+            <Txt>{DIMENSION}</Txt>
           </View>
         )}
-        {!!type && (
+        {!!TYPE && (
           <View style={styles.inline}>
             <Title>Type: </Title>
-            <Txt>{type}</Txt>
+            <Txt>{TYPE}</Txt>
           </View>
         )}
-        {!!episode && (
+        {!!EPISODE && (
           <View style={styles.inline}>
             <Title>Episode: </Title>
-            <Txt>{episode}</Txt>
+            <Txt>{EPISODE}</Txt>
           </View>
         )}
-        {!!air_date && (
+        {!!AIR_DATE && (
           <View style={styles.inline}>
             <Title>Air date: </Title>
-            <Txt>{air_date}</Txt>
+            <Txt>{AIR_DATE}</Txt>
           </View>
         )}
 
-        {data[REQUIRED_DATA].image !== null && (
+        {REQUIRED_DATA?.[0].image !== null && (
           <>
             <View style={styles.filterSelectTitle}>
               <Title>
@@ -107,8 +118,9 @@ const DetailsScreen = ({ data, filter, setRequiredDataAction }: State) => {
 
 function mapStateToProps(state: State) {
   return {
-    data: state.data[state.filter].results[state.currentCard],
+    data: state.data,
     filter: state.filter,
+    currentCard: state.currentCard,
   };
 }
 

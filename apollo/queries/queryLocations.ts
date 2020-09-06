@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { Locations } from "../types";
+import { Data } from "../types";
 
 const queryLocations = gql`
   query($name: FilterLocation, $page: Int) {
@@ -29,9 +29,10 @@ export interface Variables {
 }
 
 export interface Response {
-  [index: string]: Locations | Error | undefined;
-  locations: Locations;
-  error?: Error;
+  characters?: Data;
+  locations?: Data;
+  episodes?: Data;
+  error?: readonly Error[];
 }
 
 export default queryLocations;

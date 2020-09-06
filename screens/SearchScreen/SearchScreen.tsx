@@ -24,55 +24,67 @@ const SearchScreen = ({
   name,
   fetching,
   error,
+  filter,
   setNameAction,
-}: State) => (
-  <Container>
-    <View style={styles.searcherBox}>
-      <Searcher />
-      <TouchableOpacity onPress={() => setNameAction("")}>
-        <Ionicons
-          name="md-remove-circle"
-          size={50}
-          color="red"
-          style={styles.icon}
-        />
-      </TouchableOpacity>
-    </View>
+}: State) => {
+  const DATA_FILTERED =
+    filter === "characters"
+      ? data.characters
+      : filter === "locations"
+      ? data.locations
+      : data.episodes;
 
-    {(() => {
-      if (name.length < 3) {
-        return (
-          <>
-            <Txt style={styles.text}>
-              Here will appear what you are searching
-            </Txt>
-            <Image source={IMG} style={styles.image} />
-          </>
-        );
-      }
+  return (
+    <Container>
+      <View style={styles.searcherBox}>
+        <Searcher />
+        <TouchableOpacity onPress={() => setNameAction("")}>
+          <Ionicons
+            name="md-remove-circle"
+            size={50}
+            color="red"
+            style={styles.icon}
+          />
+        </TouchableOpacity>
+      </View>
 
-      if (error) {
-        return <Txt style={styles.text}>Something goes wrong ❌</Txt>;
-      }
+      {(() => {
+        if (name.length < 3) {
+          return (
+            <>
+              <Txt style={styles.text}>
+                Here will appear what you are searching
+              </Txt>
+              <Image source={IMG} style={styles.image} />
+            </>
+          );
+        }
 
-      if (fetching) return <ActivityIndicator color="#7ec4bf" size="large" />;
+        if (error) {
+          return <Txt style={styles.text}>Something goes wrong ❌</Txt>;
+        }
 
-      if (!data) return <Txt style={styles.text}>No results 😔</Txt>;
+        if (fetching) return <ActivityIndicator color="#7ec4bf" size="large" />;
 
-      return <Cards />;
-    })()}
-    <Tabs>
-      <Tab></Tab>
-    </Tabs>
-  </Container>
-);
+        if (DATA_FILTERED === null)
+          return <Txt style={styles.text}>No results 😔</Txt>;
+
+        return <Cards />;
+      })()}
+      <Tabs>
+        <Tab></Tab>
+      </Tabs>
+    </Container>
+  );
+};
 
 function mapStateToProps(state: State) {
   return {
     name: state.name,
     fetching: state.fetching,
     error: state.error,
-    data: state.data[state.filter],
+    data: state.data,
+    filter: state.filter,
   };
 }
 
