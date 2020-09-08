@@ -34,6 +34,28 @@ const SearchScreen = ({
       ? data.locations
       : data.episodes;
 
+  const Search = () => {
+    if (name.length < 3) {
+      return (
+        <>
+          <Txt style={styles.text}>Here will appear what you are searching</Txt>
+          <Image source={IMG} style={styles.image} />
+        </>
+      );
+    }
+
+    if (error) {
+      return <Txt style={styles.text}>Something goes wrong ❌</Txt>;
+    }
+
+    if (fetching) return <ActivityIndicator color="#7ec4bf" size="large" />;
+
+    if (DATA_FILTERED === null)
+      return <Txt style={styles.text}>No results 😔</Txt>;
+
+    return <Cards />;
+  };
+
   return (
     <Container>
       <View style={styles.searcherBox}>
@@ -48,29 +70,8 @@ const SearchScreen = ({
         </TouchableOpacity>
       </View>
 
-      {(() => {
-        if (name.length < 3) {
-          return (
-            <>
-              <Txt style={styles.text}>
-                Here will appear what you are searching
-              </Txt>
-              <Image source={IMG} style={styles.image} />
-            </>
-          );
-        }
+      <Search />
 
-        if (error) {
-          return <Txt style={styles.text}>Something goes wrong ❌</Txt>;
-        }
-
-        if (fetching) return <ActivityIndicator color="#7ec4bf" size="large" />;
-
-        if (DATA_FILTERED === null)
-          return <Txt style={styles.text}>No results 😔</Txt>;
-
-        return <Cards />;
-      })()}
       <Tabs>
         <Tab></Tab>
       </Tabs>
