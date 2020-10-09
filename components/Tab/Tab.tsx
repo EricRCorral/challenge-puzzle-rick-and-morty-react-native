@@ -2,7 +2,7 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 import Txt from "../Txt/Txt";
 import { connect } from "react-redux";
-import { setFilterAction } from "../../redux/queryDuck";
+import { setFilterAction } from "../../actions/query";
 import styles from "./styles";
 
 interface State {

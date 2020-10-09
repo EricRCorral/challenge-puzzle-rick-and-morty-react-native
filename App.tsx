@@ -6,7 +6,7 @@ import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Provider } from "react-redux";
-import generateStore from "./redux/store";
+import { generateStore } from "./store";
 
 let store = generateStore();
 
@@ -36,7 +36,7 @@ const App = () => {
             <Stack.Screen
               name="Details"
               component={DetailsScreen}
-              options={{ headerTitleAlign: "center"}}
+              options={{ headerTitleAlign: "center" }}
             />
           </Stack.Navigator>
           <StatusBar hidden={true} />

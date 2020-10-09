@@ -4,7 +4,7 @@ import { TouchableOpacity, ActivityIndicator, Image, View } from "react-native";
 import { Searcher, Container, Cards, Tab, Tabs, Txt } from "../../components";
 import { Ionicons } from "@expo/vector-icons";
 import { connect } from "react-redux";
-import { setNameAction, setCurrentCardAction } from "../../redux/queryDuck";
+import { setSearcherValueAction, setCurrentCardAction } from "../../actions/query";
 import { Response as CharactersResponse } from "../../apollo/queries/queryCharacters";
 import { Response as EpisodesResponse } from "../../apollo/queries/queryEpisodes";
 import { Response as LocationsResponse } from "../../apollo/queries/queryLocations";
@@ -13,19 +13,19 @@ import styles from "./styles";
 interface State {
   data: CharactersResponse | EpisodesResponse | LocationsResponse;
   filter: string;
-  name: string;
+  searcherValue: string;
   fetching: boolean;
   error: boolean;
-  setNameAction: { (name: string): any };
+  setSearcherValueAction: { (searcherValue: string): any };
 }
 
 const SearchScreen = ({
   data,
-  name,
+  searcherValue,
   fetching,
   error,
   filter,
-  setNameAction,
+  setSearcherValueAction,
 }: State) => {
   const DATA_FILTERED =
     filter === "characters"
@@ -35,7 +35,7 @@ const SearchScreen = ({
       : data.episodes;
 
   const Search = () => {
-    if (name.length < 3) {
+    if (searcherValue.length < 3) {
       return (
         <>
           <Txt style={styles.text}>Here will appear what you are searching</Txt>
@@ -60,7 +60,7 @@ const SearchScreen = ({
     <Container>
       <View style={styles.searcherBox}>
         <Searcher />
-        <TouchableOpacity onPress={() => setNameAction("")}>
+        <TouchableOpacity onPress={() => setSearcherValueAction("")}>
           <Ionicons
             name="md-remove-circle"
             size={50}
@@ -81,7 +81,7 @@ const SearchScreen = ({
 
 function mapStateToProps(state: State) {
   return {
-    name: state.name,
+    searcherValue: state.searcherValue,
     fetching: state.fetching,
     error: state.error,
     data: state.data,
@@ -90,6 +90,6 @@ function mapStateToProps(state: State) {
 }
 
 export default connect(mapStateToProps, {
-  setNameAction,
+  setSearcherValueAction,
   setCurrentCardAction,
 })(SearchScreen);

@@ -14,7 +14,7 @@ import {
   setCurrentCardAction,
   setRequiredDataAction,
   getDataAction,
-} from "../../redux/queryDuck";
+} from "../../actions/query";
 import { Response as CharactersResponse } from "../../apollo/queries/queryCharacters";
 import { Response as EpisodesResponse } from "../../apollo/queries/queryEpisodes";
 import { Response as LocationsResponse } from "../../apollo/queries/queryLocations";

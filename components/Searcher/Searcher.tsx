@@ -1,27 +1,27 @@
 import React from "react";
 import { TextInput } from "react-native";
 import { connect } from "react-redux";
-import { setNameAction } from "../../redux/queryDuck";
+import { setSearcherValueAction } from "../../actions/query";
 import styles from "./styles";
 
 interface State {
-  name: string;
-  setNameAction: { (name: string): any };
+  searcherValue: string;
+  setSearcherValueAction: { (searcherValue: string): any };
 }
 
-const Searcher = ({ name, setNameAction }: State) => (
+const Searcher = ({ searcherValue, setSearcherValueAction }: State) => (
   <TextInput
     placeholder="Character, location, episode..."
     style={styles.searcher}
-    value={name}
-    onChange={(e) => setNameAction(e.nativeEvent.text)}
+    value={searcherValue}
+    onChange={(e) => setSearcherValueAction(e.nativeEvent.text)}
   />
 );
 
 function mapStateToProps(state: State) {
   return {
-    name: state.name,
+    searcherValue: state.searcherValue,
   };
 }
 
-export default connect(mapStateToProps, { setNameAction })(Searcher);
+export default connect(mapStateToProps, { setSearcherValueAction })(Searcher);

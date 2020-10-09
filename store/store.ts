@@ -1,5 +1,5 @@
 import { createStore, compose, applyMiddleware } from "redux";
-import queryReducer from "./queryDuck";
+import queryReducer from "../reducers/query";
 import thunk from "redux-thunk";
 
 declare global {
