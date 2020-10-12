@@ -14,7 +14,7 @@ const TABS = ["Characters", "Locations", "Episodes"];
 
 const Tab = ({ filter, setFilterAction }: State) => (
   <>
-    {TABS.map((tabFilterName, i) => (
+    {TABS.map((tabFilterName) => (
       <TouchableOpacity
         key={tabFilterName}
         style={[
@@ -28,8 +28,7 @@ const Tab = ({ filter, setFilterAction }: State) => (
       >
         <Txt
           style={{
-            color:
-              tabFilterName.toLowerCase() === filter ? "white" : "black",
+            color: tabFilterName.toLowerCase() === filter ? "white" : "black",
             ...styles.text,
           }}
         >

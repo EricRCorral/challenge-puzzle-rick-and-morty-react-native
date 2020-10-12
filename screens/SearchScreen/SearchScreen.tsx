@@ -4,7 +4,7 @@ import { TouchableOpacity, ActivityIndicator, Image, View } from "react-native";
 import { Searcher, Container, Cards, Tab, Tabs, Txt } from "../../components";
 import { Ionicons } from "@expo/vector-icons";
 import { connect } from "react-redux";
-import { setSearcherValueAction, setCurrentCardAction } from "../../actions/query";
+import { setSearcherValueAction } from "../../actions/query";
 import { Response as CharactersResponse } from "../../apollo/queries/queryCharacters";
 import { Response as EpisodesResponse } from "../../apollo/queries/queryEpisodes";
 import { Response as LocationsResponse } from "../../apollo/queries/queryLocations";
@@ -50,7 +50,7 @@ const SearchScreen = ({
 
     if (fetching) return <ActivityIndicator color="#7ec4bf" size="large" />;
 
-    if (DATA_FILTERED === null)
+    if (!DATA_FILTERED)
       return <Txt style={styles.text}>No results 😔</Txt>;
 
     return <Cards />;
@@ -91,5 +91,4 @@ function mapStateToProps(state: State) {
 
 export default connect(mapStateToProps, {
   setSearcherValueAction,
-  setCurrentCardAction,
 })(SearchScreen);

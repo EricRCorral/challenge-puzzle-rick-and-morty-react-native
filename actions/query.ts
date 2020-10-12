@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, DocumentNode } from "@apollo/client";
+import { ApolloClient, DocumentNode, InMemoryCache } from "@apollo/client";
 import queryCharacters, {
   Variables as CharactersVariables,
 } from "../apollo/queries/queryCharacters";
@@ -16,7 +16,6 @@ import {
   SET_CURRENT_CARD,
   SET_FILTER,
   SET_SEARCHER_VALUE,
-  SET_REQUIRED_DATA,
 } from "./types";
 
 interface Dispatch {
@@ -34,7 +33,7 @@ export let getDataAction = (next?: number) => (
 ) => {
   const FILTER: string = getState().filter;
   const DATA: any = getState().data;
-  const NAME: string = getState().searcherValue;
+  const SEARCHER_VALUE: string = getState().searcherValue;
 
   if (FILTER === "characters") {
     if (!next && next !== null) {
@@ -45,32 +44,32 @@ export let getDataAction = (next?: number) => (
       return client
         .query<DocumentNode, CharactersVariables>({
           query: queryCharacters,
-          variables: { name: { name: NAME }, page: 1 },
+          variables: { name: { name: SEARCHER_VALUE }, page: 1 },
           errorPolicy: "all",
         })
         .then(({ data }) => {
           dispatch({
             type: GET_DATA_SUCCESS,
-            payload: { data, error: false },
+            payload: data,
           });
         })
         .catch(() => {
           dispatch({
             type: GET_DATA_ERROR,
-            payload: { error: true },
+            payload: true,
           });
         });
     } else {
       return client
         .watchQuery<any, CharactersVariables>({
           query: queryCharacters,
-          variables: { name: { name: NAME }, page: 1 },
+          variables: { name: { name: SEARCHER_VALUE }, page: 1 },
         })
         .fetchMore({
-          variables: { name: { name: NAME }, page: next },
+          variables: { name: { name: SEARCHER_VALUE }, page: next },
 
           updateQuery: (prev, { fetchMoreResult }) => {
-            if (next === null) {
+            if (!next) {
               return;
             } else {
               fetchMoreResult[FILTER].results = [
@@ -95,32 +94,32 @@ export let getDataAction = (next?: number) => (
       return client
         .query<DocumentNode, LocationsVariables>({
           query: queryLocations,
-          variables: { name: { name: NAME }, page: 1 },
+          variables: { name: { name: SEARCHER_VALUE }, page: 1 },
           errorPolicy: "all",
         })
         .then(({ data }) => {
           dispatch({
             type: GET_DATA_SUCCESS,
-            payload: { data, error: false },
+            payload: data,
           });
         })
         .catch(() => {
           dispatch({
             type: GET_DATA_ERROR,
-            payload: { error: true },
+            payload: true,
           });
         });
     } else {
       return client
         .watchQuery<any, LocationsVariables>({
           query: queryLocations,
-          variables: { name: { name: NAME }, page: 1 },
+          variables: { name: { name: SEARCHER_VALUE }, page: 1 },
         })
         .fetchMore({
-          variables: { name: { name: NAME }, page: next },
+          variables: { name: { name: SEARCHER_VALUE }, page: next },
 
           updateQuery: (prev, { fetchMoreResult }) => {
-            if (next === null) {
+            if (!next) {
               return;
             } else {
               fetchMoreResult[FILTER].results = [
@@ -145,32 +144,32 @@ export let getDataAction = (next?: number) => (
       return client
         .query<DocumentNode, EpisodesVariables>({
           query: queryEpisodes,
-          variables: { name: { name: NAME }, page: 1 },
+          variables: { name: { name: SEARCHER_VALUE }, page: 1 },
           errorPolicy: "all",
         })
         .then(({ data }) => {
           dispatch({
             type: GET_DATA_SUCCESS,
-            payload: { data, error: false },
+            payload: data,
           });
         })
         .catch(() => {
           dispatch({
             type: GET_DATA_ERROR,
-            payload: { error: true },
+            payload: true,
           });
         });
     } else {
       return client
         .watchQuery<any, EpisodesVariables>({
           query: queryEpisodes,
-          variables: { name: { name: NAME }, page: 1 },
+          variables: { name: { name: SEARCHER_VALUE }, page: 1 },
         })
         .fetchMore({
-          variables: { name: { name: NAME }, page: next },
+          variables: { name: { name: SEARCHER_VALUE }, page: next },
 
           updateQuery: (prev, { fetchMoreResult }) => {
-            if (next === null) {
+            if (!next) {
               return;
             } else {
               fetchMoreResult[FILTER].results = [
@@ -211,18 +210,11 @@ export let setFilterAction = (filter: string) => (
   getDataAction()(dispatch, getState);
 };
 
-export let setCurrentCardAction = (i: number) => (dispatch: Dispatch) => {
-  dispatch({
-    type: SET_CURRENT_CARD,
-    payload: i,
-  });
-};
-
-export let setRequiredDataAction = (filterNoCharacters: boolean) => (
+export let setCurrentCardAction = (currentCard: number) => (
   dispatch: Dispatch
 ) => {
   dispatch({
-    type: SET_REQUIRED_DATA,
-    payload: filterNoCharacters,
+    type: SET_CURRENT_CARD,
+    payload: currentCard,
   });
 };

@@ -1,9 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { View, Image, ScrollView } from "react-native";
 import { Container, Title, Cards, Txt } from "../../components";
 import { connect } from "react-redux";
-import { setRequiredDataAction } from "../../actions/query";
-import { useNavigation } from "@react-navigation/native";
 import { Response as CharactersResponse } from "../../apollo/queries/queryCharacters";
 import { Response as EpisodesResponse } from "../../apollo/queries/queryEpisodes";
 import { Response as LocationsResponse } from "../../apollo/queries/queryLocations";
@@ -13,15 +11,9 @@ interface State {
   data: CharactersResponse | EpisodesResponse | LocationsResponse;
   filter: string;
   currentCard: number;
-  setRequiredDataAction: { (filterNoCharacters: boolean): any };
 }
 
-const DetailsScreen = ({
-  data,
-  filter,
-  currentCard,
-  setRequiredDataAction,
-}: State) => {
+const DetailsScreen = ({ data, filter, currentCard }: State) => {
   const RESULTS =
     filter === "characters"
       ? data.characters?.results[currentCard]
@@ -40,12 +32,6 @@ const DetailsScreen = ({
   const DIMENSION = RESULTS?.dimension;
   const EPISODE = RESULTS?.episode;
   const AIR_DATE = RESULTS?.air_date;
-
-  const BEFORE_REMOVE = useNavigation().addListener;
-
-  useEffect(() => {
-    BEFORE_REMOVE("beforeRemove", () => setRequiredDataAction(false));
-  }, []);
 
   const CardDetails = () => {
     if (filter === "characters") {
@@ -134,6 +120,4 @@ function mapStateToProps(state: State) {
   };
 }
 
-export default connect(mapStateToProps, { setRequiredDataAction })(
-  DetailsScreen
-);
+export default connect(mapStateToProps)(DetailsScreen);

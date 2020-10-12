@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Ref, useRef } from "react";
 import {
   View,
   Image,
@@ -9,12 +9,8 @@ import {
 } from "react-native";
 import Title from "../Title/Title";
 import { connect } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
-import {
-  setCurrentCardAction,
-  setRequiredDataAction,
-  getDataAction,
-} from "../../actions/query";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { setCurrentCardAction, getDataAction } from "../../actions/query";
 import { Response as CharactersResponse } from "../../apollo/queries/queryCharacters";
 import { Response as EpisodesResponse } from "../../apollo/queries/queryEpisodes";
 import { Response as LocationsResponse } from "../../apollo/queries/queryLocations";
@@ -24,9 +20,7 @@ interface State {
   filter: string;
   data: CharactersResponse | EpisodesResponse | LocationsResponse;
   currentCard: number;
-  filterNoCharacters: boolean;
   setCurrentCardAction: { (index: number): any };
-  setRequiredDataAction: { (filterNoCharacters: boolean): any };
   getDataAction: { (next?: number): any };
 }
 
@@ -34,14 +28,16 @@ const Cards = ({
   filter,
   data,
   currentCard,
-  filterNoCharacters,
   setCurrentCardAction,
-  setRequiredDataAction,
   getDataAction,
 }: State) => {
-  const navigation = useNavigation();
+  const NAVIGATION = useNavigation();
 
-  const DATA_FILTERED =
+  const navigateToCard = (currentCard: number) => {
+    setCurrentCardAction(currentCard);
+    NAVIGATION.navigate("Details");
+  };
+  const RESULTS: any =
     filter === "characters"
       ? data.characters?.results
       : filter === "locations"
@@ -49,9 +45,11 @@ const Cards = ({
       : data.episodes?.results;
 
   const REQUIRED_DATA =
-    filter === "locations"
-      ? data.locations?.results[currentCard].residents?.slice(0, 5)
-      : data.episodes?.results[currentCard].characters?.slice(0, 5);
+    useRoute().name === "Details"
+      ? filter === "locations"
+        ? RESULTS?.[currentCard].residents?.slice(0, 5)
+        : RESULTS?.[currentCard].characters?.slice(0, 5)
+      : undefined;
 
   const NEXT =
     filter === "characters"
@@ -60,36 +58,45 @@ const Cards = ({
       ? data.locations?.info.next
       : data.episodes?.info.next;
 
-  const navigate = (i: number) => {
-    if (filter !== "characters") {
-      setRequiredDataAction(true);
-    }
-    setCurrentCardAction(i);
-    navigation.navigate("Details");
-  };
+  const FLAT_LIST_REF: Ref<any> = useRef();
 
-  const fetchMoreData = (next?: number) => {
-    getDataAction(next);
+  const scrollPrevLastIndex = () => {
+    if (!!NEXT && NEXT > 2) {
+      return FLAT_LIST_REF.current.scrollToIndex({
+        animated: false,
+        index: (NEXT - 2) * 20 - 4,
+        viewOffset: -50,
+      });
+    } else if (!NEXT && RESULTS.length > 20) {
+      FLAT_LIST_REF.current.scrollToIndex({
+        animated: false,
+        index: RESULTS.length - (RESULTS.length % 20) - 4,
+        viewOffset: -50,
+      });
+    }
   };
 
   return (
     <FlatList
-      data={!filterNoCharacters ? DATA_FILTERED : REQUIRED_DATA}
-      style={!filterNoCharacters && styles.spaceBottom}
+      ref={FLAT_LIST_REF}
+      initialNumToRender={RESULTS.length - 1}
+      onContentSizeChange={scrollPrevLastIndex}
+      data={!REQUIRED_DATA ? RESULTS : REQUIRED_DATA}
+      style={!REQUIRED_DATA && styles.spaceBottom}
       ListFooterComponentStyle={styles.loader}
-      onEndReached={() => fetchMoreData(NEXT)}
+      onEndReached={() => getDataAction(NEXT)}
       onEndReachedThreshold={0.5}
       ListFooterComponent={
         !!NEXT && <ActivityIndicator color="#7ec4bf" size="large" />
       }
       renderItem={({ item, index }) => (
         <TouchableOpacity
-          disabled={filterNoCharacters}
+          disabled={!!REQUIRED_DATA}
           key={item.id}
-          onPress={() => navigate(index)}
+          onPress={() => navigateToCard(index)}
         >
           <View style={styles.card}>
-            {filter === "characters" || filterNoCharacters ? (
+            {filter === "characters" || !!REQUIRED_DATA ? (
               <>
                 <Image
                   style={styles.image}
@@ -118,13 +125,11 @@ function mapStateToProps(state: State) {
   return {
     filter: state.filter,
     currentCard: state.currentCard,
-    filterNoCharacters: state.filterNoCharacters,
     data: state.data,
   };
 }
 
 export default connect(mapStateToProps, {
   setCurrentCardAction,
-  setRequiredDataAction,
   getDataAction,
 })(Cards);
