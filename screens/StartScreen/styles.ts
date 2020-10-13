@@ -1,6 +1,9 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     justifyContent: "space-between",
@@ -27,6 +30,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderWidth: 1,
     marginBottom: "5%",
+    borderColor: "darkgrey"
   },
 });
 

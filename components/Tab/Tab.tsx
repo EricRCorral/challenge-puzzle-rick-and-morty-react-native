@@ -17,18 +17,12 @@ const Tab = ({ filter, setFilterAction }: State) => (
     {TABS.map((tabFilterName) => (
       <TouchableOpacity
         key={tabFilterName}
-        style={[
-          styles.tab,
-          {
-            backgroundColor:
-              tabFilterName.toLowerCase() === filter ? "#7ec4bf" : "white",
-          },
-        ]}
+        style={styles.tab}
         onPress={() => setFilterAction(tabFilterName.toLowerCase())}
       >
         <Txt
           style={{
-            color: tabFilterName.toLowerCase() === filter ? "white" : "black",
+            color: tabFilterName.toLowerCase() === filter ? "white" : "grey",
             ...styles.text,
           }}
         >

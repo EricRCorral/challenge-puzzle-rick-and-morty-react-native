@@ -15,6 +15,7 @@ const Searcher = ({ searcherValue, setSearcherValueAction }: State) => (
     style={styles.searcher}
     value={searcherValue}
     onChange={(e) => setSearcherValueAction(e.nativeEvent.text)}
+    placeholderTextColor={"black"}
   />
 );
 

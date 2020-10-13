@@ -4,7 +4,6 @@ import {
   Image,
   Text,
   FlatList,
-  ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
 import Title from "../Title/Title";
@@ -15,6 +14,8 @@ import { Response as CharactersResponse } from "../../apollo/queries/queryCharac
 import { Response as EpisodesResponse } from "../../apollo/queries/queryEpisodes";
 import { Response as LocationsResponse } from "../../apollo/queries/queryLocations";
 import styles from "./styles";
+
+import { PORTAL } from "../../assets/images";
 
 interface State {
   filter: string;
@@ -37,6 +38,9 @@ const Cards = ({
     setCurrentCardAction(currentCard);
     NAVIGATION.navigate("Details");
   };
+
+  const actualScreen = useRoute().name;
+
   const RESULTS: any =
     filter === "characters"
       ? data.characters?.results
@@ -45,7 +49,7 @@ const Cards = ({
       : data.episodes?.results;
 
   const REQUIRED_DATA =
-    useRoute().name === "Details"
+    actualScreen === "Details"
       ? filter === "locations"
         ? RESULTS?.[currentCard].residents?.slice(0, 5)
         : RESULTS?.[currentCard].characters?.slice(0, 5)
@@ -87,7 +91,7 @@ const Cards = ({
       onEndReached={() => getDataAction(NEXT)}
       onEndReachedThreshold={0.5}
       ListFooterComponent={
-        !!NEXT && <ActivityIndicator color="#7ec4bf" size="large" />
+        !!NEXT && <Image source={PORTAL} style={styles.portal} />
       }
       renderItem={({ item, index }) => (
         <TouchableOpacity
@@ -104,11 +108,18 @@ const Cards = ({
                     uri: item.image,
                   }}
                 />
-                <Title style={styles.characterTitle}>{item.name}</Title>
+                <Title
+                  style={{
+                    ...styles.characterTitle,
+                    color: actualScreen == "Details" ? "white" : "black",
+                  }}
+                >
+                  {item.name}
+                </Title>
               </>
             ) : (
               <View style={styles.box}>
-                <Title>{item.name}</Title>
+                <Title style={{color: "black"}}>{item.name}</Title>
                 <Text style={styles.text}>
                   {filter === "locations" ? item.dimension : item.episode}
                 </Text>

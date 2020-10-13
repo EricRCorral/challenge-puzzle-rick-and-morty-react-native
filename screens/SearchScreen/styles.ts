@@ -1,6 +1,14 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+  },
+  portal: {
+    width: 200,
+    height: 200,
+    alignSelf: "center",
+  },
   searcherBox: {
     width: "100%",
     flexDirection: "row",
@@ -10,16 +18,11 @@ const styles = StyleSheet.create({
   icon: {
     marginLeft: 3,
   },
-  image: {
-    width: "100%",
-    height: "55%",
-    position: "absolute",
-    bottom: "5%",
-  },
   text: {
-    fontSize: 22,
+    fontSize: 30,
     textAlign: "center",
     marginTop: "5%",
+    color: "black"
   },
   boxImage: {
     alignItems: "center",

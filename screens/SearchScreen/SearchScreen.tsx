@@ -1,7 +1,15 @@
 import React from "react";
-import { IMG } from "../../assets/images";
-import { TouchableOpacity, ActivityIndicator, Image, View } from "react-native";
-import { Searcher, Container, Cards, Tab, Tabs, Txt } from "../../components";
+import { PORTAL, SEARCH_BACKGROUND } from "../../assets/images";
+import { TouchableOpacity, Image, View, ImageBackground } from "react-native";
+import {
+  Searcher,
+  Container,
+  Cards,
+  Tab,
+  Tabs,
+  Txt,
+  Title,
+} from "../../components";
 import { Ionicons } from "@expo/vector-icons";
 import { connect } from "react-redux";
 import { setSearcherValueAction } from "../../actions/query";
@@ -38,8 +46,7 @@ const SearchScreen = ({
     if (searcherValue.length < 3) {
       return (
         <>
-          <Txt style={styles.text}>Here will appear what you are searching</Txt>
-          <Image source={IMG} style={styles.image} />
+          <Title style={styles.text}>Start your search, get schwifty !</Title>
         </>
       );
     }
@@ -48,34 +55,40 @@ const SearchScreen = ({
       return <Txt style={styles.text}>Something goes wrong ❌</Txt>;
     }
 
-    if (fetching) return <ActivityIndicator color="#7ec4bf" size="large" />;
+    if (fetching) return <Image source={PORTAL} style={styles.portal} />;
 
     if (!DATA_FILTERED)
-      return <Txt style={styles.text}>No results 😔</Txt>;
+      return (
+        <Title style={styles.text}>
+          Nothing here, try other words to get schwifty !
+        </Title>
+      );
 
     return <Cards />;
   };
 
   return (
-    <Container>
-      <View style={styles.searcherBox}>
-        <Searcher />
-        <TouchableOpacity onPress={() => setSearcherValueAction("")}>
-          <Ionicons
-            name="md-remove-circle"
-            size={50}
-            color="red"
-            style={styles.icon}
-          />
-        </TouchableOpacity>
-      </View>
+    <ImageBackground source={SEARCH_BACKGROUND} style={styles.backgroundImage}>
+      <Container>
+        <View style={styles.searcherBox}>
+          <Searcher />
+          <TouchableOpacity onPress={() => setSearcherValueAction("")}>
+            <Ionicons
+              name="md-remove-circle"
+              color="red"
+              size={50}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+        </View>
 
-      <Search />
+        <Search />
 
-      <Tabs>
-        <Tab></Tab>
-      </Tabs>
-    </Container>
+        <Tabs>
+          <Tab></Tab>
+        </Tabs>
+      </Container>
+    </ImageBackground>
   );
 };
 

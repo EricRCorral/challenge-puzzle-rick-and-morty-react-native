@@ -1,6 +1,9 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+  },
   nameBox: {
     flexDirection: "row",
     justifyContent: "center",
@@ -12,6 +15,7 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: 350,
+    borderRadius: 160
   },
   inline: {
     flexDirection: "row",

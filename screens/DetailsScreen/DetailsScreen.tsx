@@ -1,11 +1,12 @@
 import React from "react";
-import { View, Image, ScrollView } from "react-native";
+import { View, Image, ScrollView, ImageBackground } from "react-native";
 import { Container, Title, Cards, Txt } from "../../components";
 import { connect } from "react-redux";
 import { Response as CharactersResponse } from "../../apollo/queries/queryCharacters";
 import { Response as EpisodesResponse } from "../../apollo/queries/queryEpisodes";
 import { Response as LocationsResponse } from "../../apollo/queries/queryLocations";
 import styles from "./styles";
+import { DETAILS_BACKGROUND } from "../../assets/images";
 
 interface State {
   data: CharactersResponse | EpisodesResponse | LocationsResponse;
@@ -104,11 +105,13 @@ const DetailsScreen = ({ data, filter, currentCard }: State) => {
   };
 
   return (
-    <Container>
-      <ScrollView>
-        <CardDetails />
-      </ScrollView>
-    </Container>
+    <ImageBackground source={DETAILS_BACKGROUND} style={styles.backgroundImage}>
+      <Container>
+        <ScrollView>
+          <CardDetails />
+        </ScrollView>
+      </Container>
+    </ImageBackground>
   );
 };
 

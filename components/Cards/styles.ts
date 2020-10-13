@@ -1,6 +1,11 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
+  portal: {
+    width: 200,
+    height: 200,
+    alignSelf: "center"
+  },
   card: {
     width: "100%",
     marginTop: 10,
@@ -17,6 +22,7 @@ const styles = StyleSheet.create({
   image: {
     width: 90,
     height: 90,
+    borderRadius: 45
   },
   characterTitle: {
     marginLeft: 10,

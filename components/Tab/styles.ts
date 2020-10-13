@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderLeftWidth: .5,
     borderRightWidth: .5,
+    borderColor: "white"
   },
   text: {
     fontSize: 16,

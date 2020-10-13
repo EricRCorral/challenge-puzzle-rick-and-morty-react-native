@@ -36,7 +36,13 @@ const App = () => {
             <Stack.Screen
               name="Details"
               component={DetailsScreen}
-              options={{ headerTitleAlign: "center" }}
+              options={{
+                headerTitleAlign: "center",
+                headerTintColor: "white",
+                headerStyle: {
+                  backgroundColor: "black"
+                }
+              }}
             />
           </Stack.Navigator>
           <StatusBar hidden={true} />
