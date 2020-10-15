@@ -85,22 +85,20 @@ const SearchScreen = ({
         <Search />
 
         <Tabs>
-          <Tab></Tab>
+          <Tab />
         </Tabs>
       </Container>
     </ImageBackground>
   );
 };
 
-function mapStateToProps(state: State) {
-  return {
-    searcherValue: state.searcherValue,
-    fetching: state.fetching,
-    error: state.error,
-    data: state.data,
-    filter: state.filter,
-  };
-}
+const mapStateToProps = (state: State) => ({
+  searcherValue: state.searcherValue,
+  fetching: state.fetching,
+  error: state.error,
+  data: state.data,
+  filter: state.filter,
+});
 
 export default connect(mapStateToProps, {
   setSearcherValueAction,

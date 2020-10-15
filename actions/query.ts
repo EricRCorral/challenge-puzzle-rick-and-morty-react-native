@@ -59,7 +59,7 @@ export let getDataAction = (next?: number) => (
             payload: true,
           });
         });
-    } else {
+    }
       return client
         .watchQuery<any, CharactersVariables>({
           query: queryCharacters,
@@ -84,7 +84,7 @@ export let getDataAction = (next?: number) => (
             }
           },
         });
-    }
+    
   } else if (FILTER === "locations") {
     if (!next && next !== null) {
       dispatch({
@@ -109,7 +109,7 @@ export let getDataAction = (next?: number) => (
             payload: true,
           });
         });
-    } else {
+    }
       return client
         .watchQuery<any, LocationsVariables>({
           query: queryLocations,
@@ -134,7 +134,7 @@ export let getDataAction = (next?: number) => (
             }
           },
         });
-    }
+    
   } else {
     if (!next && next !== null) {
       dispatch({
@@ -159,7 +159,7 @@ export let getDataAction = (next?: number) => (
             payload: true,
           });
         });
-    } else {
+    }
       return client
         .watchQuery<any, EpisodesVariables>({
           query: queryEpisodes,
@@ -184,7 +184,7 @@ export let getDataAction = (next?: number) => (
             }
           },
         });
-    }
+    
   }
 };
 

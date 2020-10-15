@@ -58,50 +58,49 @@ const DetailsScreen = ({ data, filter, currentCard }: State) => {
           )}
         </>
       );
-    } else {
-      return (
-        <>
-          <View style={styles.nameBox}>
-            <Title style={styles.name}>{NAME?.toUpperCase()}</Title>
-          </View>
-          {!!DIMENSION && (
-            <View style={styles.inline}>
-              <Title>Dimension: </Title>
-              <Txt>{DIMENSION}</Txt>
-            </View>
-          )}
-          {!!TYPE && (
-            <View style={styles.inline}>
-              <Title>Type: </Title>
-              <Txt>{TYPE}</Txt>
-            </View>
-          )}
-          {!!EPISODE && (
-            <View style={styles.inline}>
-              <Title>Episode: </Title>
-              <Txt>{EPISODE}</Txt>
-            </View>
-          )}
-          {!!AIR_DATE && (
-            <View style={styles.inline}>
-              <Title>Air date: </Title>
-              <Txt>{AIR_DATE}</Txt>
-            </View>
-          )}
-
-          {REQUIRED_DATA?.[0].image !== null && (
-            <>
-              <View style={styles.filterSelectTitle}>
-                <Title>
-                  {filter === "locations" ? "Residents:" : "Characters:"}
-                </Title>
-              </View>
-              <Cards />
-            </>
-          )}
-        </>
-      );
     }
+    return (
+      <>
+        <View style={styles.nameBox}>
+          <Title style={styles.name}>{NAME?.toUpperCase()}</Title>
+        </View>
+        {!!DIMENSION && (
+          <View style={styles.inline}>
+            <Title>Dimension: </Title>
+            <Txt>{DIMENSION}</Txt>
+          </View>
+        )}
+        {!!TYPE && (
+          <View style={styles.inline}>
+            <Title>Type: </Title>
+            <Txt>{TYPE}</Txt>
+          </View>
+        )}
+        {!!EPISODE && (
+          <View style={styles.inline}>
+            <Title>Episode: </Title>
+            <Txt>{EPISODE}</Txt>
+          </View>
+        )}
+        {!!AIR_DATE && (
+          <View style={styles.inline}>
+            <Title>Air date: </Title>
+            <Txt>{AIR_DATE}</Txt>
+          </View>
+        )}
+
+        {REQUIRED_DATA?.[0].image !== null && (
+          <>
+            <View style={styles.filterSelectTitle}>
+              <Title>
+                {filter === "locations" ? "Residents:" : "Characters:"}
+              </Title>
+            </View>
+            <Cards />
+          </>
+        )}
+      </>
+    );
   };
 
   return (
@@ -115,12 +114,10 @@ const DetailsScreen = ({ data, filter, currentCard }: State) => {
   );
 };
 
-function mapStateToProps(state: State) {
-  return {
-    data: state.data,
-    filter: state.filter,
-    currentCard: state.currentCard,
-  };
-}
+const mapStateToProps = (state: State) => ({
+  data: state.data,
+  filter: state.filter,
+  currentCard: state.currentCard,
+});
 
 export default connect(mapStateToProps)(DetailsScreen);

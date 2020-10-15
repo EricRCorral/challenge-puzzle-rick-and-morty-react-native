@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
   portal: {
     width: 200,
     height: 200,
-    alignSelf: "center"
+    alignSelf: "center",
   },
   card: {
     width: "100%",
@@ -16,13 +16,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  blackTitle: {
+    color: "#000000",
+  },
   spaceBottom: {
     marginBottom: "18%",
   },
   image: {
     width: 90,
     height: 90,
-    borderRadius: 45
+    borderRadius: 45,
   },
   characterTitle: {
     marginLeft: 10,
@@ -41,4 +44,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default styles
+export default styles;

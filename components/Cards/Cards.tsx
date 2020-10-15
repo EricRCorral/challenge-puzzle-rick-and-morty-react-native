@@ -1,11 +1,5 @@
 import React, { Ref, useRef } from "react";
-import {
-  View,
-  Image,
-  Text,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
+import { View, Image, Text, FlatList, TouchableOpacity } from "react-native";
 import Title from "../Title/Title";
 import { connect } from "react-redux";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -14,7 +8,6 @@ import { Response as CharactersResponse } from "../../apollo/queries/queryCharac
 import { Response as EpisodesResponse } from "../../apollo/queries/queryEpisodes";
 import { Response as LocationsResponse } from "../../apollo/queries/queryLocations";
 import styles from "./styles";
-
 import { PORTAL } from "../../assets/images";
 
 interface State {
@@ -39,7 +32,7 @@ const Cards = ({
     NAVIGATION.navigate("Details");
   };
 
-  const actualScreen = useRoute().name;
+  const CURRENT_SCREEN = useRoute().name;
 
   const RESULTS: any =
     filter === "characters"
@@ -49,7 +42,7 @@ const Cards = ({
       : data.episodes?.results;
 
   const REQUIRED_DATA =
-    actualScreen === "Details"
+    CURRENT_SCREEN === "Details"
       ? filter === "locations"
         ? RESULTS?.[currentCard].residents?.slice(0, 5)
         : RESULTS?.[currentCard].characters?.slice(0, 5)
@@ -109,17 +102,17 @@ const Cards = ({
                   }}
                 />
                 <Title
-                  style={{
-                    ...styles.characterTitle,
-                    color: actualScreen == "Details" ? "white" : "black",
-                  }}
+                  style={[
+                    styles.characterTitle,
+                    { color: CURRENT_SCREEN == "Details" ? "white" : "black" },
+                  ]}
                 >
                   {item.name}
                 </Title>
               </>
             ) : (
               <View style={styles.box}>
-                <Title style={{color: "black"}}>{item.name}</Title>
+                <Title style={styles.blackTitle}>{item.name}</Title>
                 <Text style={styles.text}>
                   {filter === "locations" ? item.dimension : item.episode}
                 </Text>
@@ -132,13 +125,11 @@ const Cards = ({
   );
 };
 
-function mapStateToProps(state: State) {
-  return {
-    filter: state.filter,
-    currentCard: state.currentCard,
-    data: state.data,
-  };
-}
+const mapStateToProps = (state: State) => ({
+  filter: state.filter,
+  currentCard: state.currentCard,
+  data: state.data,
+});
 
 export default connect(mapStateToProps, {
   setCurrentCardAction,

@@ -21,10 +21,12 @@ const Tab = ({ filter, setFilterAction }: State) => (
         onPress={() => setFilterAction(tabFilterName.toLowerCase())}
       >
         <Txt
-          style={{
-            color: tabFilterName.toLowerCase() === filter ? "white" : "grey",
-            ...styles.text,
-          }}
+          style={[
+            styles.text,
+            {
+              color: tabFilterName.toLowerCase() === filter ? "white" : "grey",
+            },
+          ]}
         >
           {tabFilterName}
         </Txt>
@@ -32,10 +34,8 @@ const Tab = ({ filter, setFilterAction }: State) => (
     ))}
   </>
 );
-function mapStateToProps(state: State) {
-  return {
-    filter: state.filter,
-  };
-}
+const mapStateToProps = (state: State) => ({
+  filter: state.filter,
+});
 
 export default connect(mapStateToProps, { setFilterAction })(Tab);

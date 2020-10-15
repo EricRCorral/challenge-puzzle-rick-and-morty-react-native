@@ -17,39 +17,37 @@ const client = new ApolloClient({
 
 const Stack = createStackNavigator();
 
-const App = () => {
-  return (
-    <ApolloProvider client={client}>
-      <Provider store={store}>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen
-              name="Start"
-              component={StartScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Search"
-              component={SearchScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Details"
-              component={DetailsScreen}
-              options={{
-                headerTitleAlign: "center",
-                headerTintColor: "white",
-                headerStyle: {
-                  backgroundColor: "black"
-                }
-              }}
-            />
-          </Stack.Navigator>
-          <StatusBar hidden={true} />
-        </NavigationContainer>
-      </Provider>
-    </ApolloProvider>
-  );
-};
+const App = () => (
+  <ApolloProvider client={client}>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Start"
+            component={StartScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Search"
+            component={SearchScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Details"
+            component={DetailsScreen}
+            options={{
+              headerTitleAlign: "center",
+              headerTintColor: "white",
+              headerStyle: {
+                backgroundColor: "black",
+              },
+            }}
+          />
+        </Stack.Navigator>
+        <StatusBar hidden={true} />
+      </NavigationContainer>
+    </Provider>
+  </ApolloProvider>
+);
 
 export default App;
